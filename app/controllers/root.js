@@ -6,7 +6,7 @@ const controller = require('lib/wiring/controller');
 const root = (req, res) => {
   res.json({
     index: {
-      title: 'Express Template',
+      title: 'Desert Island API',
       environment: req.app.get('env'),
     },
   });
