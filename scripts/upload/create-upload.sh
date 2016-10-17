@@ -1,19 +1,14 @@
-curl --include --request POST http://localhost:3000/uploads \
--F upload[comment]="Hello from curl" -F upload[file]=@<filename>
+# curl --include --request POST http://localhost:3000/uploads \
+#   --header "Content-Type: application/json" \
+#   --data '{
+#     "upload": {
+#       "title": "best-picture-ever",
+#       "description": "beach"
+#     }
+#   }'
 
-curl --include --request POST http://localhost:3000/uploads -F upload[comment]="Hello from curl" -F upload[file]=@<filename>
-
-
-curl --include --request POST http://localhost:3000/uploads \
-  --header "Content-Type: application/json" \
-  --data '{
-    "upload": {
-      "title": "best-picture-ever",
-      "description": "beach"
-    }
-  }'
-
+# this one works
   curl --include --request POST http://localhost:3000/uploads \
-    -F upload[title]='TEST' \
-    -F upload[description]="a test file" \
+    -F upload[title]='pretty thing' \
+    -F upload[description]="a picture of a pretty thing" \
     -F upload[file]=@
