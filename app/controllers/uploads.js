@@ -55,12 +55,25 @@ const update = (req, res, next) => {
   ;
 };
 
+const destroy = (req, res, next) => {
+  let id = req.params.id;
+  let options = {}; 
+
+  Upload.findByIdAndRemove(id, options)
+  .then(()=> res.sendStatus(204))
+  .catch(err => next(err))
+  ;
+};
+
+
+
 
 module.exports = controller({
   index,
   show,
   create,
   update,
+  destroy
 }, { before: [
   // { method: authenticate, except: ['index', 'show'] },
   { method: multer.single('upload[file]'), only: ['create'] },
