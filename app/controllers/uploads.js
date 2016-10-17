@@ -38,10 +38,29 @@ const create = (req, res, next) => {
   .catch(err => next(err));
 };
 
+const update = (req, res, next) => {
+  let id = req.params.id;
+  let update = {
+                title: req.body.upload.title,
+                description: req.body.upload.description,
+               };
+  let options = {
+                  new: true,
+                  runValidators: false,
+                };
+
+  Upload.findByIdAndUpdate(id, update, options)
+  .then(upload => res.json({ upload }))
+  .catch(err => next(err))
+  ;
+};
+
+
 module.exports = controller({
   index,
   show,
   create,
+  update,
 }, { before: [
   // { method: authenticate, except: ['index', 'show'] },
   { method: multer.single('upload[file]'), only: ['create'] },
