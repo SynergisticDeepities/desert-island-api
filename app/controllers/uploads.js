@@ -40,20 +40,35 @@ const create = (req, res, next) => {
 };
 
 const update = (req, res, next) => {
-  let id = req.params.id;
-  let update = {
-                title: req.body.upload.title,
-                description: req.body.upload.description,
-               };
-  let options = {
-                  new: true,
-                  runValidators: false,
-                };
+  let search = { _id: req.params.id, _owner: req.currentUser._id };
+  Upload.findOne(search)
+    .then(upload => {
+      if (!upload) {
+        return next();
+      }
 
-  Upload.findByIdAndUpdate(id, update, options)
-  .then(upload => res.json({ upload }))
-  .catch(err => next(err))
-  ;
+      delete req.body._owner;  // disallow owner reassignment.
+      return upload.update(req.body.upload)
+        .then(() => res.sendStatus(200));
+    })
+    .catch(err => next(err));
+
+
+
+  // let id = req.params.id;
+  // let update = {
+  //               title: req.body.upload.title,
+  //               description: req.body.upload.description,
+  //              };
+  // let options = {
+  //                 new: true,
+  //                 runValidators: false,
+  //               };
+  //
+  // Upload.findByIdAndUpdate(id, update, options)
+  // .then(upload => res.json({ upload }))
+  // .catch(err => next(err))
+  // ;
 };
 
 const destroy = (req, res, next) => {
