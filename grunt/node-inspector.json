@@ -1,7 +1,7 @@
 {
   "debug": {
     "options": {
-      "web-port": 8080,
+      "web-port": 7165,
       "web-host": "localhost",
       "debug-port": 5858,
       "save-live-edit": true,
