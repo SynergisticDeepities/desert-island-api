@@ -57,8 +57,7 @@ const update = (req, res, next) => {
 
 const destroy = (req, res, next) => {
   let id = req.params.id;
-  let options = {};
-  console.log(id);
+  let options = {}; 
 
   Upload.findByIdAndRemove(id, options)
   .then(()=> res.sendStatus(204))
