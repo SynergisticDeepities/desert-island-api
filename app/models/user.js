@@ -5,10 +5,19 @@ const mongoose = require('mongoose');
 const uniqueValidator = require('mongoose-unique-validator');
 
 const userSchema = new mongoose.Schema({
+  // Uncomment this once the front end sign-up form has a 'name' field
+  // Remember to edit users#signup to assign credentials.name to the new user
+  // name: {
+  //   type: String,
+  //   required: true,
+  // },
   email: {
     type: String,
     unique: true,
     required: true,
+  },
+  uploads: {
+    type: [{ type : mongoose.Schema.Types.ObjectId, ref: 'Upload' }],
   },
   token: {
     type: String,
