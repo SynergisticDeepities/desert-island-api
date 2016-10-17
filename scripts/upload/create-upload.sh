@@ -9,6 +9,6 @@
 
 # this one works
   curl --include --request POST http://localhost:3000/uploads \
-    -F upload[title]='pretty thing' \
-    -F upload[description]="a picture of a pretty thing" \
+    -F upload[title]='1:30' \
+    -F upload[description]="1:30" \
     -F upload[file]=@
