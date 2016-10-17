@@ -19,5 +19,5 @@ module.exports = require('lib/wiring/routes')
 
 //Upload files
 
-.resources('uploads', { only: ['index','show','create']})
+.resources('uploads', { only: ['index','show','create', 'update']})
 ;
