@@ -29,6 +29,7 @@ const create = (req, res, next) => {
       title: req.body.upload.title,
       description: req.body.upload.description,
       location: response.Location,
+      key: response.key,
       _owner: req.currentUser._id,
     };
   })
