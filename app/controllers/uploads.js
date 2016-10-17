@@ -8,7 +8,7 @@ const Upload = models.upload;
 
 const uploader = require('lib/aws-s3-upload');
 
-// const authenticate = require('./concerns/authenticate');
+const authenticate = require('./concerns/authenticate');
 
 const index = (req, res, next) => {
   Upload.find()
@@ -29,6 +29,7 @@ const create = (req, res, next) => {
       title: req.body.upload.title,
       description: req.body.upload.description,
       location: response.Location,
+      _owner: req.currentUser._id,
     };
   })
   .then((upload) => {
@@ -57,15 +58,13 @@ const update = (req, res, next) => {
 
 const destroy = (req, res, next) => {
   let id = req.params.id;
-  let options = {}; 
+  let options = {};
 
   Upload.findByIdAndRemove(id, options)
   .then(()=> res.sendStatus(204))
   .catch(err => next(err))
   ;
 };
-
-
 
 
 module.exports = controller({
@@ -75,6 +74,6 @@ module.exports = controller({
   update,
   destroy
 }, { before: [
-  // { method: authenticate, except: ['index', 'show'] },
+  { method: authenticate, except: ['index', 'show'] },
   { method: multer.single('upload[file]'), only: ['create'] },
 ], });
