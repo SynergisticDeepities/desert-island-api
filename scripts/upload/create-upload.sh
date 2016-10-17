@@ -1,15 +1,5 @@
-# curl --include --request POST http://localhost:3000/uploads \
-#   --header "Content-Type: application/json" \
-#   --data '{
-#     "upload": {
-#       "title": "best-picture-ever",
-#       "description": "beach"
-#     }
-#   }'
-
-# this one works
 curl --include --request POST http://localhost:3000/uploads \
-  --header "Authorization: Token token=zoZSXT67Jy4IPaOPt+0jm/JbwNhbqI+RhQDXtA2XzBU=--b8MuU2ELpOsNgi7j4ZGsJQEeC3y4P7uB2YlxEgLDsRc=" \
-  -F upload[title]='hooplaaaa' \
-  -F upload[description]="dum ditty dee ditty doo" \
+  --header "Authorization: Token token=HyKjqTR7b0jxel1v0EGEsBREZKXel3snwVj0q7KfpeI=--KMJXRSyy3b7u7S4I5UlCRtZeTY3gARP3LNS0mT/Mr5I=" \
+  -F upload[title]='a thing' \
+  -F upload[description]="it is a very nice thing" \
   -F upload[file]=@
