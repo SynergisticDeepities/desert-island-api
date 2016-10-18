@@ -1,9 +1,23 @@
-curl --include --request PATCH http://localhost:3000/uploads/5804e986780d4d26415a5a2f \
+# Local Curl
+curl --include --request PATCH http://localhost:3000/uploads/58065ab616c54b0013ec6801 \
   --header "Content-Type: application/json" \
-  --header "Authorization: Token token=zoZSXT67Jy4IPaOPt+0jm/JbwNhbqI+RhQDXtA2XzBU=--b8MuU2ELpOsNgi7j4ZGsJQEeC3y4P7uB2YlxEgLDsRc=" \
+  --header "Authorization: Token token=/zGpoz7lLBmFTNdjp5+5AlZUD2KNGfIKWusqgLy3NCg=--CfYY+jx9CcB8h8cMeZdfo2RjhKgQMf8jbYar/LH0zTI=" \
   --data '{
     "upload": {
-      "title": "2:17",
-      "description": "ITS 2:17 PM"
+      "title": "It Works!",
+      "description": "It Works!"
     }
   }'
+
+
+# Deployed Curl
+
+curl --include --request PATCH https://desert-island-api.herokuapp.com/uploads/58065ab616c54b0013ec6801 \
+--header "Content-Type: application/json" \
+--header "Authorization: Token token=/zGpoz7lLBmFTNdjp5+5AlZUD2KNGfIKWusqgLy3NCg=--CfYY+jx9CcB8h8cMeZdfo2RjhKgQMf8jbYar/LH0zTI=" \
+--data '{
+  "upload": {
+    "title": "It Works!",
+    "description": "It Works!"
+  }
+}'
