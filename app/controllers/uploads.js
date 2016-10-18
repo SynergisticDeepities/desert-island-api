@@ -24,6 +24,13 @@ const show = (req, res, next) => {
 };
 
 const create = (req, res, next) => {
+  let numUploads = req.currentUser.uploads.length;
+  if (numUploads >= 5) {
+    res.sendStatus(400);
+    res.send('Maximum number of uploads already reached.');
+    next();
+  }
+
   uploader.awsUpload(req.file.buffer)
   .then((response) => {
     return {
