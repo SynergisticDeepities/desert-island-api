@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# Local Curl
+
 curl --include --request POST http://localhost:3000/sign-up \
   --header "Content-Type: application/json" \
   --data '{
@@ -10,12 +12,14 @@ curl --include --request POST http://localhost:3000/sign-up \
     }
   }'
 
-curl --include --request POST http://localhost:3000/sign-up \
+# Deployed Curl
+
+curl --include --request POST https://desert-island-api.herokuapp.com/sign-up \
   --header "Content-Type: application/json" \
   --data '{
     "credentials": {
-      "email": "another@example.email",
-      "password": "an example password",
-      "password_confirmation": "an example password"
+      "email": "1@1.com",
+      "password": "1",
+      "password_confirmation": "1"
     }
   }'
