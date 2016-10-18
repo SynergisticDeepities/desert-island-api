@@ -74,7 +74,16 @@ const signin = (req, res, next) => {
   let credentials = req.body.credentials;
   let search = { email: credentials.email };
   User.findOne(search
-  ).then(user =>
+  )
+  .populate('uploads')
+  .exec(function (err, user) {
+    if (err) {
+      next(err);
+    } else {
+      return user;
+    }
+  })
+  .then(user =>
     user ? user.comparePassword(credentials.password) :
           Promise.reject(new HttpError(404))
   ).then(user =>
