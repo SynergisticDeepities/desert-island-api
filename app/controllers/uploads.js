@@ -25,37 +25,35 @@ const show = (req, res, next) => {
 
 const create = (req, res, next) => {
   let numUploads = req.currentUser.uploads.length;
-  if (numUploads >= 5) {
-    res.sendStatus(400);
-    res.send('Maximum number of uploads already reached.');
-    next();
+  if (numUploads < 5) {
+    uploader.awsUpload(req.file.buffer)
+    .then((response) => {
+      return {
+        title: req.body.upload.title,
+        description: req.body.upload.description,
+        location: response.Location,
+        key: response.key,
+        _owner: req.currentUser._id,
+      };
+    })
+    .then((upload) => {
+      return Upload.create(upload);
+    })
+    .then((upload) => {
+      // store a reference to the new upload in the user's uploads array
+      let search = { _id: req.currentUser._id};
+      User.findOne(search, (err, user)=>{
+        user.uploads.push(upload._id);
+        user.save();
+      });
+      // return the new upload so it can be rendered in the response
+      return upload;
+    })
+    .then(upload => res.json({ upload }))
+    .catch(err => next(err));
+  } else {
+    res.sendStatus(403);
   }
-
-  uploader.awsUpload(req.file.buffer)
-  .then((response) => {
-    return {
-      title: req.body.upload.title,
-      description: req.body.upload.description,
-      location: response.Location,
-      key: response.key,
-      _owner: req.currentUser._id,
-    };
-  })
-  .then((upload) => {
-    return Upload.create(upload);
-  })
-  .then((upload) => {
-    // store a reference to the new upload in the user's uploads array
-    let search = { _id: req.currentUser._id};
-    User.findOne(search, (err, user)=>{
-      user.uploads.push(upload._id);
-      user.save();
-    });
-    // return the new upload so it can be rendered in the response
-    return upload;
-  })
-  .then(upload => res.json({ upload }))
-  .catch(err => next(err));
 };
 
 const update = (req, res, next) => {
