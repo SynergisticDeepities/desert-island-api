@@ -72,19 +72,31 @@ const update = (req, res, next) => {
 };
 
 const destroy = (req, res, next) => {
-    let search = { _id: req.params.id, _owner: req.currentUser._id };
-    Upload.findOne(search)
-      .then(upload => {
-        if (!upload) {
-          return next();
-        }
-
-        return upload.remove()
-          .then(() => res.sendStatus(204));
-      })
-      .catch(err => next(err));
+  let userId = req.currentUser._id;
+  let search = { _id: req.params.id, _owner: userId };
+  Upload.findOne(search)
+  .then((upload) => {
+    // make sure an upload was returned
+    if (!upload) {
+      return next();
+    }
+    // find the upload's owner and remove reference from their uploads
+    User.findById(userId)
+    .then((user) => {
+      let userUploads = user.uploads;
+      let imageIndex = userUploads.indexOf(upload._id);
+      userUploads.splice(imageIndex, 1);
+      user.save();
+    });
+    // return the upload so it can be used later in the promise chain
+    return upload;
+  })
+  .then((upload) => {
+    return upload.remove()
+      .then(() => res.sendStatus(204));
+  })
+  .catch(err => next(err));
   };
-
 
 module.exports = controller({
   index,
