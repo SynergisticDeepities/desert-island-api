@@ -5,6 +5,7 @@ const multer = require('app/middleware').multer;
 
 const models = require('app/models');
 const Upload = models.upload;
+const User = models.user;
 
 const uploader = require('lib/aws-s3-upload');
 
@@ -29,11 +30,22 @@ const create = (req, res, next) => {
       title: req.body.upload.title,
       description: req.body.upload.description,
       location: response.Location,
+      key: response.key,
       _owner: req.currentUser._id,
     };
   })
   .then((upload) => {
     return Upload.create(upload);
+  })
+  .then((upload) => {
+    // store a reference to the new upload in the user's uploads array
+    let search = { _id: req.currentUser._id};
+    User.findOne(search, (err, user)=>{
+      user.uploads.push(upload._id);
+      user.save();
+    });
+    // return the new upload so it can be rendered in the response
+    return upload;
   })
   .then(upload => res.json({ upload }))
   .catch(err => next(err));
