@@ -36,6 +36,14 @@ const index = (req, res, next) => {
 
 const show = (req, res, next) => {
   User.findById(req.params.id, userFilter)
+    .populate('uploads')
+    .exec(function (err, user) {
+      if (err) {
+        next(err);
+      } else {
+        return user;
+      }
+    })
     .then(user => user ? res.json({ user }) : next())
     .catch(err => next(err));
 };
