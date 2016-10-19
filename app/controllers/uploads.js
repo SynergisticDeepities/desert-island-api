@@ -3,6 +3,8 @@
 const controller = require('lib/wiring/controller');
 const multer = require('app/middleware').multer;
 
+const fileType = require('file-type');
+
 const models = require('app/models');
 const Upload = models.upload;
 const User = models.user;
@@ -10,6 +12,9 @@ const User = models.user;
 const uploader = require('lib/aws-s3-upload');
 
 const authenticate = require('./concerns/authenticate');
+
+const SIZE_LIMIT = 10000000;
+const ACCEPTED_FILE_TYPES = ['png', 'gif', 'jpg', 'jpeg'];
 
 const index = (req, res, next) => {
   Upload.find()
@@ -24,8 +29,13 @@ const show = (req, res, next) => {
 };
 
 const create = (req, res, next) => {
+  let ext = (fileType(req.file.buffer)).ext;
   let numUploads = req.currentUser.uploads.length;
-  if (numUploads < 5) {
+  let typeAllowed = ACCEPTED_FILE_TYPES.indexOf(ext);
+  if (numUploads < 5 &&
+      req.file.buffer.byteLength < SIZE_LIMIT  &&
+      typeAllowed >= 0
+      ) {
     uploader.awsUpload(req.file.buffer)
     .then((response) => {
       return {
