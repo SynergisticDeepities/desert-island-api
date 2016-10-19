@@ -28,19 +28,24 @@ const getToken = () =>
 
 const userFilter = { passwordDigest: 0, token: 0 };
 
+// Find all users in the database and attach then to the response
 const index = (req, res, next) => {
   User.find({}, userFilter)
     .then(users => res.json({ users }))
     .catch(err => next(err));
 };
 
+// Find user with matching ID, populate its uploads, and send user to client
 const show = (req, res, next) => {
+  // populate the user's uploads array, replacing references to
+  // the user's uploads with the upload records theselves
   User.findById(req.params.id, userFilter)
     .populate('uploads')
     .exec(function (err, user) {
       if (err) {
         next(err);
       } else {
+        // if successful, return the user to it can be attached to the response
         return user;
       }
     })
@@ -54,6 +59,7 @@ const makeErrorHandler = (res, next) =>
       res.status(400).json({ error }) :
     next(error);
 
+// create a new user record with userName, email, and password from request body
 const signup = (req, res, next) => {
   let credentials = req.body.credentials;
   let user = { userName: credentials.userName, email: credentials.email, password: credentials.password };
@@ -67,19 +73,22 @@ const signup = (req, res, next) => {
     delete user.passwordDigest;
     res.json({ user });
   }).catch(makeErrorHandler(res, next));
-
 };
 
+// Sign a user in
 const signin = (req, res, next) => {
   let credentials = req.body.credentials;
+  // use email as search parameter, since unique email was required for signup
   let search = { email: credentials.email };
-  User.findOne(search
-  )
+  User.findOne(search)
+  // populate the user's uploads array, replacing references to
+  // the user's uploads with the upload records theselves
   .populate('uploads')
   .exec(function (err, user) {
     if (err) {
       next(err);
     } else {
+      // if successful, return the user to it can be used in the next method
       return user;
     }
   })
@@ -99,6 +108,7 @@ const signin = (req, res, next) => {
   }).catch(makeErrorHandler(res, next));
 };
 
+// Sign a user out
 const signout = (req, res, next) => {
   getToken().then(token =>
     User.findOneAndUpdate({
@@ -112,6 +122,7 @@ const signout = (req, res, next) => {
   ).catch(next);
 };
 
+// Change a user's password
 const changepw = (req, res, next) => {
   debug('Changing password');
   User.findOne({
@@ -136,5 +147,6 @@ module.exports = controller({
   signout,
   changepw,
 }, { before: [
+  // require token authentication before all actions except signup and signin
   { method: authenticate, except: ['signup', 'signin'] },
 ], });
