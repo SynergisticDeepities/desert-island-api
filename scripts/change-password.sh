@@ -6,8 +6,8 @@ curl --include --request PATCH http://localhost:3000/change-password/$ID \
   --header "Content-Type: application/json" \
   --data '{
     "passwords": {
-      "old": "an example password",
-      "new": "super sekrit"
+      "old": "1",
+      "new": "2"
     }
   }'
 
@@ -19,7 +19,7 @@ curl --include --request PATCH https://desert-island-api.herokuapp.com/change-pa
   --header "Content-Type: application/json" \
   --data '{
     "passwords": {
-      "old": "an example password",
-      "new": "super sekrit"
+      "old": "1",
+      "new": "2"
     }
   }'
